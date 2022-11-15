@@ -1,0 +1,46 @@
+.main {
+    margin: auto;
+    padding:20px;
+    background-color:#ebebeb;
+    font-size:15px;
+}
+
+.web-title {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.connect-wallet {
+    text-align: center;
+}
+
+.wallet-id {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #0fb896;
+}
+
+.connect-wallet-btn {
+    background-color: #0fb896;
+    color: white;
+    font-size: 20px;
+    padding: 10px 60px;
+    border-radius: 5px;
+    margin: 10px 0px;
+    cursor: pointer;
+    border-color: #1abc9c;
+}
+
+.transaction-form {
+    width: 50%;
+    padding-left: 25%;
+}
+
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
