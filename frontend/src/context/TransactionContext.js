@@ -34,17 +34,17 @@ export const TransactionProvider = ({children}) => {
             const accounts = await ethereum.request({ method : "eth_accounts"});
             if (accounts.length) {
                 setCurrentAccount(accounts[0]);
+                checkIfTransactionExists();
                 getAllTransactions();
             }
         } catch (error) {
             console.log(error);
             throw new Error("No Ethereum object");
         }
-        
     }
+    
     useEffect(() => {
         checkIfWalletIsConnected();
-        checkIfTransactionExists();
     }, []);
 
     const connectWallet = async () => {
@@ -65,7 +65,6 @@ export const TransactionProvider = ({children}) => {
             const { addressTo, amount, keyword, message } = formData;
             const transactionContract = getEthereumContract ();
             const parseAmount = ethers.utils.parseEther(amount);
-            console.log("parseAmount", parseAmount._hex);
             
             await ethereum.request({
                 method: "eth_sendTransaction",
@@ -80,10 +79,8 @@ export const TransactionProvider = ({children}) => {
             const transactionHash = await transactionContract.addToBlockchain(addressTo, parseAmount, message, keyword);
             console.log("transactionHash", transactionHash);
             setIsLoading(true);
-            console.log("loading", transactionHash.hash);
             await transactionHash.wait();
             setIsLoading(false);
-            console.log("Success", transactionHash.hash);
 
             const transactionCount = await transactionContract.getTransactionCount();
             setTransactionCount(transactionCount.toNumber());
