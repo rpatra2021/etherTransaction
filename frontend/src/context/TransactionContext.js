@@ -69,7 +69,7 @@ export const TransactionProvider = ({children}) => {
             const transactionContract = getEthereumContract ();
             const parseAmount = ethers.utils.parseEther(amount);
             console.log(senderName, addressTo, receiverName, amount, message);
-
+            // https://docs.metamask.io/guide/sending-transactions.html#example
             await ethereum.request({
                 method: "eth_sendTransaction",
                 params: [{
