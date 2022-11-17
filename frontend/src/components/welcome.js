@@ -10,13 +10,11 @@ const hexToDecimal = hex => parseInt(hex, 16);
 
 const Welcome = () => {
     const {connectWallet, currentAccount, formData, setFormData, handleChange, sendTransaction, isLoading, transactionCount, allTransactions} = useContext(TransactionContext);
-    console.log("allTransactions", allTransactions);
-    console.log(moment.unix(1668606036).format('LLLL'));
+
     const handleSubmit = (e) => {
-        const { addressTo, amount, keyword, message } = formData;
-        console.log( addressTo, amount, keyword, message);
+        const { senderName, addressTo, receiverName, amount, message } = formData;
         e.preventDefault();
-        if (!addressTo || !amount || !keyword || !message) {
+        if (!senderName || !addressTo || !receiverName || !amount || !message) {
             alert("all field are required");
             return;
         }
@@ -44,7 +42,7 @@ const Welcome = () => {
             </div>
 
             {currentAccount && (
-                transactionForm(handleChange, handleSubmit, isLoading)
+                transactionForm(handleChange, handleSubmit, isLoading, currentAccount)
             )}
 
             <hr></hr>
@@ -65,12 +63,27 @@ const Welcome = () => {
     )
 }
 
-const transactionForm = (handleChange, handleSubmit, isLoading) => {
+const transactionForm = (handleChange, handleSubmit, isLoading, currentAccount) => {
     return (
         <div className="transaction-form">
             <div>
-                Address To: 
-                <input type="text" name="addressTo" placeholder="Set receiver account id" onChange={handleChange} />
+                Sent From Account Id: 
+                <input type="text" readOnly disabled value={ shortenAddress(currentAccount) } />
+            </div>
+
+            <div>
+                Sender Name:
+                <input type="text" name="senderName" placeholder="Enter the Sender Name" onChange={handleChange} />
+            </div>
+
+            <div>
+                Sent To Account Id: 
+                <input type="password" name="addressTo" placeholder="Set receiver account id" onChange={handleChange} />
+            </div>
+
+            <div>
+                Receiver Name:
+                <input type="text" name="receiverName" placeholder="Enter the Receiver name" onChange={handleChange} />
             </div>
 
             <div>
@@ -79,12 +92,7 @@ const transactionForm = (handleChange, handleSubmit, isLoading) => {
             </div>
             
             <div>
-                Keyword:
-                <input type="text" name="keyword" placeholder="Enter the keyword" onChange={handleChange} />
-            </div>
-
-            <div>
-                Message: 
+                Additional Message: 
                 <input type="text" name="message" placeholder="Enter an message" onChange={handleChange} />
             </div>
 
@@ -106,10 +114,11 @@ const transactionList = (allTransactions) => {
             <thead>
                 <tr>
                     <th>Transaction From</th>
+                    <th>Sender Name</th>
                     <th>Transaction To</th>
+                    <th>Receiver Name</th>
                     <th>Amount(ETH)</th>
                     <th>Message</th>
-                    <th>Keyword</th>
                     <th>Transaction Time</th>
                 </tr>
             </thead>
@@ -119,12 +128,14 @@ const transactionList = (allTransactions) => {
                     allTransactions.map(dataObj => ( 
                         <tr>
                             <td>{ shortenAddress(dataObj.sender) }</td>
+                            <td>{ dataObj.senderName }</td>
                             <td>{ shortenAddress(dataObj.receiver) }</td>
+                            <td>{ dataObj.receiverName }</td>
                             {/* https://piyopiyo.medium.com/how-to-convert-ether-from-wei-and-vice-versa-with-web3-1-0-0-3e3e691e3f0e */}
-                            <td>{ Web3.utils.fromWei(String(hexToDecimal(dataObj.amount._hex)), 'ether') }
+                            <td>
+                                { Web3.utils.fromWei(String(hexToDecimal(dataObj.amount._hex)), 'ether') }
                             </td>
                             <td>{ dataObj.message }</td>
-                            <td>{ dataObj.keyword }</td>
                             <td>{ moment.unix(hexToDecimal(dataObj.timestamp._hex)).format('LLLL') }</td>
                         </tr>
                     ))

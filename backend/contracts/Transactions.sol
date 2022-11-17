@@ -3,32 +3,33 @@
 pragma solidity ^0.8.0;
 
 contract Transactions {
-    uint256 transactionCount=0;
-
-    event Transfer(address form, address receiver, uint amount, string message, uint256 timestamp, string keyword);
-
+    uint256 totalTransactionCount=0;
+    event Transfer(address form, string senderName, address receiver, string receiverName, uint amount, string message, uint256 timestamp);
+   
     struct TransferStruct {
         address sender;
+        string senderName;
         address receiver;
+        string receiverName;
         uint amount;
         string message;
         uint256 timestamp;
-        string keyword;
     }
 
-    TransferStruct[] transactions;
+    // https://www.geeksforgeeks.org/array-of-structures-vs-array-within-a-structure-in-c-and-cpp/
+    TransferStruct[] transactionList;
 
-    function addToBlockchain(address payable receiver, uint amount, string memory messsage, string memory keyword) public {
-        transactionCount = transactionCount+1;
-        transactions.push(TransferStruct(msg.sender, receiver, amount, messsage, block.timestamp, keyword));
-        emit Transfer(msg.sender, receiver, amount, messsage, block.timestamp, keyword);
+    function addToBlockchain(string memory senderName, address payable receiver, string memory receiverName, uint amount, string memory messsage) public {
+        totalTransactionCount = totalTransactionCount+1;
+        transactionList.push(TransferStruct(msg.sender, senderName, receiver, receiverName, amount, messsage, block.timestamp));
+        emit Transfer(msg.sender, senderName, receiver, receiverName, amount, messsage, block.timestamp);
     }
 
     function getAllTransactions() public view returns (TransferStruct[] memory) {
-        return transactions;
+        return transactionList;
     }
 
-    function getTransactionCount() public view returns (uint256 ) {
-        return transactionCount;
+    function getTransactionCount() public view returns (uint256) {
+        return totalTransactionCount;
     }
 }

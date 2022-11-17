@@ -16,7 +16,7 @@ const getEthereumContract = () => {
 
 export const TransactionProvider = ({children}) => {
     const [currentAccount, setCurrentAccount] = useState("");
-    const [formData, setFormData] = useState({ addressTo: "", amount: "", keyword: "", message: "" })
+    const [formData, setFormData] = useState({ senderName: "", addressTo: "", receiverName: "", amount: "", message: "" })
     const [isLoading, setIsLoading] = useState(false);
     const [transactionCount, setTransactionCount] = useState(localStorage.getItem('transactionCount'));
     const [allTransactions, setAllTransactions] = useState([]);
@@ -64,11 +64,11 @@ export const TransactionProvider = ({children}) => {
     const sendTransaction = async() => {
         try {
             if (!ethereum) return alert("Please install metamask to your browser");
-            const { addressTo, amount, keyword, message } = formData;
+            const { senderName, addressTo, receiverName, amount, message } = formData;
             setIsLoading(true);
             const transactionContract = getEthereumContract ();
             const parseAmount = ethers.utils.parseEther(amount);
-            console.log("addressTo", addressTo, "parseAmount", parseAmount, "message", message, "keyword", keyword);
+            console.log(senderName, addressTo, receiverName, amount, message);
 
             await ethereum.request({
                 method: "eth_sendTransaction",
@@ -79,7 +79,7 @@ export const TransactionProvider = ({children}) => {
                     value: parseAmount._hex
                 }]
             });
-            const transactionHash = await transactionContract.addToBlockchain(addressTo, parseAmount, message, keyword);
+            const transactionHash = await transactionContract.addToBlockchain(senderName, addressTo, receiverName, parseAmount, message);
             await transactionHash.wait();
             setIsLoading(false);
             console.log("transactionHash", transactionHash);
@@ -100,6 +100,7 @@ export const TransactionProvider = ({children}) => {
             const transactionContract = getEthereumContract();
             const transactionCount = await transactionContract.getTransactionCount();
             window.localStorage.setItem("transactionCount", transactionCount);
+            setTransactionCount(transactionCount.toNumber());
             console.log("transactionCount onload", transactionCount, transactionCount.toNumber());
         } catch (error) {
             console.log(error);
