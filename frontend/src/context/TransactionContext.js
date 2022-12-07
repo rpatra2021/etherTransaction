@@ -114,7 +114,7 @@ export const TransactionProvider = ({children}) => {
             const transactionContract = getEthereumContract();
             const availableTransactions = await transactionContract.getAllTransactions();
             setAllTransactions(availableTransactions);
-            //console.log("availableTransactions", availableTransactions);
+            console.log("availableTransactions", availableTransactions);
         } catch (error) {
             console.log(error);
             throw new Error("No Ethereum object");

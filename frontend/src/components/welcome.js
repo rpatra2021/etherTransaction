@@ -23,7 +23,7 @@ const Welcome = () => {
     return (
         <div className='main'>
             <div className="web-title">
-                Welcome to Fronted App
+                Welcome to Frontend Application
             </div>
             <hr></hr>
             <div className="connect-wallet">
@@ -126,7 +126,7 @@ const transactionList = (allTransactions) => {
             <tbody>
                 {
                     allTransactions.map(dataObj => ( 
-                        <tr>
+                        <tr key={hexToDecimal(dataObj.timestamp._hex)}>
                             <td>{ shortenAddress(dataObj.sender) }</td>
                             <td>{ dataObj.senderName }</td>
                             <td>{ shortenAddress(dataObj.receiver) }</td>
